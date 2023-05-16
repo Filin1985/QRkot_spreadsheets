@@ -7,16 +7,14 @@ from app.core.config import settings
 
 # Константа с форматом строкового представления времени
 FORMAT = "%Y/%m/%d %H:%M:%S"
-TABLE_NAME = 'Отчет от {now_date_time}'
+TABLE_NAME = 'Отчет'
 SHEET_NAME = 'Рейтинг'
 
 ROW_NUMBER = 50
 COLUMN_NUMBER = 5
 BODY = dict(
     properties=dict(
-        title=TABLE_NAME.format(
-            now_date_time=datetime.now().strftime(FORMAT)
-        ),
+        title=TABLE_NAME,
         locale='ru_RU',
     ),
     sheets=[dict(properties=dict(
@@ -30,7 +28,7 @@ BODY = dict(
     ))]
 )
 HEADER = [
-    ['Отчет от', datetime.now().strftime(FORMAT)],
+    ['Отчет', ''],
     ['Количество по скорости закрытия'],
     ['Название проекта', 'Время сбора', 'Описание']
 ]

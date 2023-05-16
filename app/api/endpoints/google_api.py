@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import List
 
 from aiogoogle import Aiogoogle
@@ -12,6 +13,10 @@ from app.schemas.charity_project import CharityProjectDB
 from app.services.google_api import (
     spreadsheets_create, set_user_permissions, spreadsheets_update_value
 )
+
+
+ERROR_MESSAGE = 'Запрос с текущими параметрами невозможно испольнить'
+DOCS_URL = 'https://docs.google.com/spreadsheets/d/{spreadsheet_id}'
 
 
 router = APIRouter()
@@ -32,9 +37,15 @@ async def get_report(
     )
     spreadsheet_id = await spreadsheets_create(wrapper_services)
     await set_user_permissions(spreadsheet_id, wrapper_services)
-    await spreadsheets_update_value(
-        spreadsheet_id,
-        projects,
-        wrapper_services
-    )
-    return projects.scalars().all()
+    try:
+        await spreadsheets_update_value(
+            spreadsheet_id,
+            projects,
+            wrapper_services
+        )
+    except ValueError:
+        raise HTTPStatus(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=ERROR_MESSAGE
+        )
+    return {'url': DOCS_URL.format(spreadsheet_id=spreadsheet_id)}
