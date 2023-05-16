@@ -27,7 +27,7 @@ async def get_report(
         session: AsyncSession = Depends(get_async_session),
         wrapper_services: Aiogoogle = Depends(get_service)
 ):
-    projects = await charity_project_crud.get_projects_by_completion_rate(
+    projects = await charity_project_crud.get_projects_by_fully_invested(
         session
     )
     spreadsheet_id = await spreadsheets_create(wrapper_services)
@@ -37,4 +37,4 @@ async def get_report(
         projects,
         wrapper_services
     )
-    return projects
+    return projects.scalars().all()
