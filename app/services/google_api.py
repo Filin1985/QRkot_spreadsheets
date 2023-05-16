@@ -80,9 +80,9 @@ async def spreadsheets_update_value(
     header = deepcopy(HEADER)
     header[0][1] = datetime.now().strftime(FORMAT)
     sorted_projects = sorted(
-            projects,
-            key=lambda project: project.close_date - project.create_date
-        )
+        projects,
+        key=lambda project: project.close_date - project.create_date
+    )
     table_values = [
         *header,
         *[list(map(str, [
